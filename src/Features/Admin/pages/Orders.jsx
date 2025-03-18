@@ -121,7 +121,7 @@ const Orders = () => {
       status: 'Pending',
       items: [
         { name: 'Notebook', quantity: 1, price: 200 },
-        { name: 'Pen Set', quantity: 1, price: 600},
+        
       ]
     },
     {
@@ -142,6 +142,16 @@ const Orders = () => {
       status: 'Processing',
       items: [
         { name: 'Fun & Kawai Stationery', quantity: 1, price: 500 },
+      ]
+    },
+    {
+      id: 4,
+      customer: 'John Rai',
+      date: '2025-02-20',
+      total: 500,
+      status: 'Processing',
+      items: [
+        { name: 'Eco-friendly & Sustainable', quantity: 1, price: 800 },
       ]
     },
   ]);

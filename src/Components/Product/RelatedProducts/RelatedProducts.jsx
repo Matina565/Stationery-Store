@@ -35,8 +35,7 @@ const RelatedProducts = () => {
       <div className="relatedProductSection">
         <div className="relatedProducts">
           <h2>
-            RELATED <span>PRODUCTS</span>
-          </h2>
+            RELATED PRODUCTS        </h2>
         </div>
         <div className="relatedProductSlider">
           <div className="swiper-button image-swiper-button-next">
@@ -93,7 +92,7 @@ const RelatedProducts = () => {
 
                     <div className="relatedProductInfo">
                       <div className="rpCategoryWishlist">
-                        <p>Dresses</p>
+                        {/* <p>Dresses</p>
                         <FiHeart
                           onClick={() => handleWishlistClick(product.productID)}
                           style={{
@@ -102,11 +101,11 @@ const RelatedProducts = () => {
                               : "#767676",
                             cursor: "pointer",
                           }}
-                        />
+                        /> */}
                       </div>
                       <div className="productNameInfo">
                         <h5 onClick={scrollToTop}>{product.productName}</h5>
-                        <p>${product.productPrice}</p>
+                        <p>Rs.{product.productPrice}</p>
                         <div className="productRatingReviews">
                           <div className="productRatingStar">
                             <FaStar color="#FEC78A" size={10} />

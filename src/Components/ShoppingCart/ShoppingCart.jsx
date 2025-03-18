@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import "./ShoppingCart.css";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -12,6 +12,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import success from "../../Assets/success.png";
+import KhaltiCheckout from "khalti-checkout-web";
 
 const ShoppingCart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -19,6 +20,25 @@ const ShoppingCart = () => {
 
   const [activeTab, setActiveTab] = useState("cartTab1");
   const [payments, setPayments] = useState(false);
+
+  const [orderData, setOrderData] = useState({
+    firstName: '',
+    lastName: '',
+    country: '',
+    streetAddress: '',
+    city: '',
+    postcode: '',
+    phone: '',
+    email: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setOrderData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleTabClick = (tab) => {
     if (tab === "cartTab1" || cartItems.length > 0) {
@@ -62,6 +82,63 @@ const ShoppingCart = () => {
 
   const handlePaymentChange = (e) => {
     setSelectedPayment(e.target.value);
+  };
+
+  const handleKhaltiPayment = () => {
+    const config = {
+      publicKey: "test_public_key_YOUR_KEY_HERE", // Replace with your Khalti public key
+      productIdentity: "123",
+      productName: "Stationery Store Order",
+      productUrl: "http://localhost:3000",
+      eventHandler: {
+        onSuccess(payload) {
+          // Handle successful payment
+          console.log(payload);
+          // Call your backend API to verify payment and save order
+          handleSuccessfulPayment(payload);
+        },
+        onError(error) {
+          console.log(error);
+          alert("Payment failed. Please try again.");
+        },
+        onClose() {
+          console.log("Payment widget closed");
+        },
+      },
+      paymentPreference: ["KHALTI"],
+    };
+
+    const checkout = new KhaltiCheckout(config);
+    checkout.show({ amount: totalPrice * 100 }); // Convert to paisa (1 NPR = 100 paisa)
+  };
+
+  const handleSuccessfulPayment = async (payload) => {
+    try {
+      // Call your backend API to verify payment and create order
+      const response = await fetch('http://localhost:8080/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderData,
+          cartItems,
+          paymentDetails: payload,
+          totalAmount: totalPrice,
+        }),
+      });
+
+      if (response.ok) {
+        // Clear cart and show success message
+        dispatch(removeFromCart());
+        alert("Order placed successfully!");
+      } else {
+        throw new Error('Failed to create order');
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      alert("Error processing order. Please contact support.");
+    }
   };
 
   return (
@@ -426,29 +503,73 @@ const ShoppingCart = () => {
                   <div className="checkoutDetailsForm">
                     <form>
                       <div className="checkoutDetailsFormRow">
-                        <input type="text" placeholder="First Name" />
-                        <input type="text" placeholder="Last Name" />
+                        <input 
+                          type="text" 
+                          placeholder="First Name *" 
+                          name="firstName"
+                          value={orderData.firstName}
+                          onChange={handleInputChange}
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="Last Name *" 
+                          name="lastName"
+                          value={orderData.lastName}
+                          onChange={handleInputChange}
+                        />
                       </div>
-                      <input
-                        type="text"
-                        placeholder="Company Name (optional)"
+                      <input 
+                        type="text" 
+                        placeholder="Company Name (optional)" 
                       />
-                      <select name="country" id="country">
-                        <option value="Country / Region" selected disabled>
-                          Country / Region
-                        </option>
+                      <select 
+                        name="country" 
+                        value={orderData.country}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Select a country *</option>
                         <option value="India">India</option>
                         <option value="Canada">Canada</option>
                         <option value="United Kingdom">United Kingdom</option>
                         <option value="United States">United States</option>
                         <option value="Turkey">Turkey</option>
                       </select>
-                      <input type="text" placeholder="Street Address*" />
-                      <input type="text" placeholder="" />
-                      <input type="text" placeholder="Town / City *" />
-                      <input type="text" placeholder="Postcode / ZIP *" />
-                      <input type="text" placeholder="Phone *" />
-                      <input type="mail" placeholder="Your Mail *" />
+                      <input 
+                        type="text" 
+                        placeholder="Street Address*" 
+                        name="streetAddress"
+                        value={orderData.streetAddress}
+                        onChange={handleInputChange}
+                      />
+                      
+                      <input 
+                        type="text" 
+                        placeholder="Town / City *" 
+                        name="city"
+                        value={orderData.city}
+                        onChange={handleInputChange}
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="Postcode / ZIP *" 
+                        name="postcode"
+                        value={orderData.postcode}
+                        onChange={handleInputChange}
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="Phone *" 
+                        name="phone"
+                        value={orderData.phone}
+                        onChange={handleInputChange}
+                      />
+                      <input 
+                        type="email" 
+                        placeholder="Your Mail *" 
+                        name="email"
+                        value={orderData.email}
+                        onChange={handleInputChange}
+                      />
                       <div className="checkoutDetailsFormCheck">
                         <label>
                           <input type="checkbox" />
@@ -604,6 +725,13 @@ const ShoppingCart = () => {
                     }}
                   >
                     Place Order
+                  </button>
+                  <button 
+                    className="place-order-btn" 
+                    onClick={handleKhaltiPayment}
+                    disabled={!cartItems.length}
+                  >
+                    Place Order with Khalti
                   </button>
                 </div>
               </div>

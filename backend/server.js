@@ -11,9 +11,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // CORS configuration
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:8081"], // Allow both frontend and backend origins
+  origin: ["http://localhost:3000", "http://localhost:8081"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true, // For cookies or authentication
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -28,45 +28,13 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-require("./app/routes/stationery.routes.js")(app);
-require("./app/routes/rating.routes.js")(app);
-require("./app/routes/upload.routes.js")(app);
+require("./app/routes/product.routes")(app);
+require("./app/routes/stationery.routes")(app);
+require("./app/routes/rating.routes")(app);
+require("./app/routes/upload.routes")(app);
+// require("./app/routes/dashboard.routes")(app);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: "Something went wrong! Please try again later."
-  });
-});
-
-// Handle 404 routes
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found"
-  });
-});
-
-// Start server
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`API URL: http://localhost:${PORT}`);
-  console.log("Press Ctrl+C to stop the server");
-}).on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    // If port 5000 is in use, try port 5001
-    const altPort = 5001;
-    console.log(`Port ${PORT} is in use, trying port ${altPort}...`);
-    server.close();
-    app.listen(altPort, () => {
-      console.log(`Server is running on port ${altPort}`);
-      console.log(`API URL: http://localhost:${altPort}`);
-      console.log("Press Ctrl+C to stop the server");
-    });
-  } else {
-    console.error(err);
-  }
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
 });

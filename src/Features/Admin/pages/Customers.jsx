@@ -44,6 +44,14 @@ const Customers = () => {
       joinDate: '2025-02-01',
       orders: 1
     },
+    { 
+      id: 4, 
+      name: 'John Rai', 
+      email: 'John@gmail.com', 
+      phone: '9845142365',
+      joinDate: '2025-02-01',
+      orders: 1
+    },
   ];
 
   return (

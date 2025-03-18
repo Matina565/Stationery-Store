@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -23,27 +23,29 @@ import {
   Stack,
   Alert,
   Snackbar,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Add as AddIcon,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 const ProductDialog = ({ open, handleClose, product, handleSave }) => {
-  const [formData, setFormData] = useState(product || {
-    name: '',
-    category: '',
-    price: '',
-    stock: '',
-    description: '',
-  });
+  const [formData, setFormData] = useState(
+    product || {
+      name: "",
+      category: "",
+      price: "",
+      stock: "",
+      description: "",
+    }
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -54,7 +56,7 @@ const ProductDialog = ({ open, handleClose, product, handleSave }) => {
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{product ? 'Edit Product' : 'Add New Product'}</DialogTitle>
+      <DialogTitle>{product ? "Edit Product" : "Add New Product"}</DialogTitle>
       <DialogContent>
         <Stack spacing={2} sx={{ mt: 2 }}>
           <TextField
@@ -107,7 +109,9 @@ const ProductDialog = ({ open, handleClose, product, handleSave }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={onSubmit} variant="contained">Save</Button>
+        <Button onClick={onSubmit} variant="contained">
+          Save
+        </Button>
       </DialogActions>
     </Dialog>
   );
@@ -117,7 +121,8 @@ const DeleteConfirmDialog = ({ open, handleClose, handleConfirm }) => (
   <Dialog open={open} onClose={handleClose}>
     <DialogTitle>Confirm Delete</DialogTitle>
     <DialogContent>
-      Are you sure you want to delete this product? This action cannot be undone.
+      Are you sure you want to delete this product? This action cannot be
+      undone.
     </DialogContent>
     <DialogActions>
       <Button onClick={handleClose}>Cancel</Button>
@@ -130,15 +135,120 @@ const DeleteConfirmDialog = ({ open, handleClose, handleConfirm }) => (
 
 const Products = () => {
   const [products, setProducts] = useState([
-    { id: 1, name: 'Notebook', category: 'Paper', price: 200, stock: 100, description: 'High-quality notebook' },
-    { id: 2, name: 'DIY & Crafting Kits', category: 'Writing', price: 400, stock: 50, description: 'Premium DIY set' },
-    { id: 3, name: 'Fun & Kawai Stationery', category: 'Writing', price: 500, stock: 5, description: 'Colorful set' },
+    {
+      id: 1,
+      name: "Aesthetic & Minimalist Notebooks",
+      category: "Paper",
+      price: 200,
+      stock: 5,
+      description: "High-quality notebook",
+    },
+    {
+      id: 2,
+      name: "Unique Pens and Markers",
+      category: "Art Supplies",
+      price: 600,
+      stock: 50,
+      description: "Premium DIY set",
+    },
+    {
+      id: 3,
+      name: "Smart and Digital Stationery",
+      category: "Office Supplies",
+      price: 700,
+      stock: 10,
+      description: "Colorful set",
+    },
+    {
+      id: 4,
+      name: "Fun & Quirky Desk Accessories",
+      category: "Writing",
+      price: 500,
+      stock: 15,
+      description: "Colorful set",
+    },
+    {
+      id: 5,
+      name: "Eco-friendly & Sustainable",
+      category: "Paper",
+      price: 800,
+      stock:15,
+      description: "Colorful set",
+    },
+    {
+      id: 6,
+      name: "DIY & Crafting Kits",
+      category: "Art Supplies",
+      price: 400,
+      stock: 50,
+      description: "Colorful set",
+    },
+    {
+      id: 7,
+      name: "Fun & Kawaii Stationery",
+      category: "Writing",
+      price: 500,
+      stock: 25,
+      description: "Colorful set",
+    },
+    {
+      id: 8,
+      name: "Desk Accessories & Organizer",
+      category: "Office Supplies",
+      price: 2000,
+      stock: 35,
+      description: "Colorful set",
+    },
+    {
+      id: 9,
+      name: "Vintage & Retro Collection",
+      category: "Paper",
+      price: 600,
+      stock:15,
+      description: "Colorful set",
+    },
+    {
+      id: 10,
+      name: "Mystery Box or Collector's Set",
+      category: "Writing",
+      price: 900,
+      stock: 15,
+      description: "Colorful set",
+    },
+    {
+      id: 11,
+      name: "Personalized & Custom Engraved Products",
+      category: "Writing",
+      price: 700,
+      stock: 50,
+      description: "Colorful set",
+    },
+    {
+      id: 12,
+      name: "Anime & Pop Culture Editions",
+      category: "Writing",
+      price: 850,
+      stock: 25,
+      description: "Colorful set",
+    },
+    {
+      id: 13,
+      name: "Special Theme-Based Collections",
+      category: "Writing",
+      price: 1500,
+      stock: 5,
+      description: "Colorful set",
+    },
   ]);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const handleAddEdit = (product = null) => {
     setSelectedProduct(product);
@@ -153,30 +263,32 @@ const Products = () => {
   const handleSave = (formData) => {
     if (selectedProduct) {
       // Edit existing product
-      setProducts(products.map(p => 
-        p.id === selectedProduct.id ? { ...formData, id: p.id } : p
-      ));
-      showSnackbar('Product updated successfully');
+      setProducts(
+        products.map((p) =>
+          p.id === selectedProduct.id ? { ...formData, id: p.id } : p
+        )
+      );
+      showSnackbar("Product updated successfully");
     } else {
       // Add new product
       setProducts([...products, { ...formData, id: products.length + 1 }]);
-      showSnackbar('Product added successfully');
+      showSnackbar("Product added successfully");
     }
   };
 
   const handleConfirmDelete = () => {
-    setProducts(products.filter(p => p.id !== selectedProduct.id));
+    setProducts(products.filter((p) => p.id !== selectedProduct.id));
     setDeleteDialogOpen(false);
-    showSnackbar('Product deleted successfully', 'info');
+    showSnackbar("Product deleted successfully", "info");
   };
 
-  const showSnackbar = (message, severity = 'success') => {
+  const showSnackbar = (message, severity = "success") => {
     setSnackbar({ open: true, message, severity });
   };
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", mb: 3 }}>
         <Typography variant="h4">Products</Typography>
         <Button
           variant="contained"
@@ -208,10 +320,16 @@ const Products = () => {
                 <TableCell>Rs.{product.price}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
-                  <IconButton color="primary" onClick={() => handleAddEdit(product)}>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleAddEdit(product)}
+                  >
                     <EditIcon />
                   </IconButton>
-                  <IconButton color="error" onClick={() => handleDelete(product)}>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDelete(product)}
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -239,7 +357,7 @@ const Products = () => {
         autoHideDuration={3000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       >
-        <Alert severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert severity={snackbar.severity} sx={{ width: "100%" }}>
           {snackbar.message}
         </Alert>
       </Snackbar>

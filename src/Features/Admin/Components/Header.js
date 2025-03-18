@@ -47,7 +47,7 @@ const Header = ({ onSidebarToggle }) => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     setLogoutDialogOpen(false);
-    navigate('/admin/login');
+    navigate('/loginSignUp');
   };
 
   const handleLogoutCancel = () => {
